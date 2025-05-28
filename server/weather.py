@@ -1,61 +1,57 @@
-from typing import Any
+from typing import List, Dict, Any
 import httpx
+import os
+from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
-# Initialize FastMCP server
-mcp = FastMCP("weather")
+# === Load environment variables and init MCP ===
+load_dotenv()
+CORE_API_KEY = os.getenv("CORE_API_KEY")
+CORE_API_URL = "https://api.core.ac.uk/v3/search/outputs"
+mcp = FastMCP("collector")
 
-# Constants
-NWS_API_BASE = "https://api.weather.gov"
-USER_AGENT = "weather-app/1.0"
 
-
-async def make_nws_request(url: str) -> dict[str, Any] | None:
-    """Make a request to the NWS API with proper error handling."""
+# === CORE API Wrapper ===
+async def search_outputs_by_keywords(keywords: str, limit: int = 5) -> List[Dict[str, Any]]:
     headers = {
-        "User-Agent": USER_AGENT,
-        "Accept": "application/geo+json"
+        "Authorization": f"Bearer {CORE_API_KEY}"
     }
+    params = {
+        "q": f'fullText:"{keywords}" AND _exists_:fullText',
+        "limit": limit
+    }
+
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(url, headers=headers, timeout=30.0)
+            response = await client.get(CORE_API_URL, headers=headers, params=params, timeout=20.0)
             response.raise_for_status()
-            return response.json()
-        except Exception:
-            return None
-        
-def format_alert(feature: dict) -> str:
-    """Format an alert feature into a readable string."""
-    props = feature["properties"]
-    return f"""
-        Event: {props.get('event', 'Unknown')}
-        Area: {props.get('areaDesc', 'Unknown')}
-        Severity: {props.get('severity', 'Unknown')}
-        Description: {props.get('description', 'No description available')}
-        Instructions: {props.get('instruction', 'No specific instructions provided')}
-        """
+            return response.json().get("results", [])
+        except Exception as e:
+            print(f"[CORE API ERROR] {e}")
+            return []
 
+
+# === MCP Tool ===
 @mcp.tool()
-async def get_alerts(state: str) -> str:
-    """Get weather alerts for a US state.
-
-    Args:
-        state: Two-letter US state code (e.g. CA, NY)
+async def get_research_papers(topic: str) -> str:
     """
-    url = f"{NWS_API_BASE}/alerts/active/area/{state}"
-    data = await make_nws_request(url)
+    Retrieve scholarly articles from CORE based on a religious or ethical keyword/topic.
+    Displays only title, abstract, and link.
+    """
+    results = await search_outputs_by_keywords(topic)
 
-    if not data or "features" not in data:
-        return "Unable to fetch alerts or no alerts found."
+    if not results:
+        return "No relevant research papers were found for this topic."
 
-    if not data["features"]:
-        return "No active alerts for this state."
+    formatted = []
+    for paper in results:
+        title = paper.get("title", "Untitled")
+        abstract = paper.get("abstract", "No abstract available")
+        url = paper.get("doi") or paper.get("url", "Unavailable")
 
-    alerts = [format_alert(feature) for feature in data["features"]]
-    return "\n---\n".join(alerts)
+        formatted.append(f"""📘 **Title**: {title}
+📄 **Abstract**: {abstract}
+🔗 **Link**: {url}
+""")
 
-
-@mcp.resource("echo://{message}")
-def echo_resource(message: str) -> str:
-    """Echo a message as a resource"""
-    return f"Resource echo: {message}"
+    return "\n---\n".join(formatted)
