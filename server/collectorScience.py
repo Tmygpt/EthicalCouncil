@@ -3,7 +3,7 @@ import httpx
 import xml.etree.ElementTree as ET
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("collectorScience")
+mcp = FastMCP("collectorScience", transport="stdio")
 
 ARXIV_API_URL = "http://export.arxiv.org/api/query"
 
@@ -47,19 +47,18 @@ async def fetch_arxiv_articles(topic: str, max_results: int = 7) -> List[Dict]:
 @mcp.tool()
 async def get_research_papers(topic: str) -> str:
     """
-    Retrieve scholarly articles from arXiv based on a religious or ethical keyword/topic.
-    Displays title, summary, authors, and PDF link.
+    Get arxiv results
     """
     results = await fetch_arxiv_articles(topic)
 
     if not results:
-        return "No relevant research papers were found for this topic."
+        return "No relevant research papers found"
 
     formatted = []
     for paper in results:
         formatted.append(f""" Title: {paper['title']}
         Authors: {paper['authors']}
-        PDF: {paper['link']}
+        Link: {paper['link']}
         """)
 
     return "\n---\n".join(formatted)
