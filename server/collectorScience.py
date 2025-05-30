@@ -3,14 +3,11 @@ import httpx
 import xml.etree.ElementTree as ET
 from mcp.server.fastmcp import FastMCP
 
-# === Init MCP ===
-mcp = FastMCP("collector")
+mcp = FastMCP("collectorScience")
 
-# === Constants ===
 ARXIV_API_URL = "http://export.arxiv.org/api/query"
 
 
-# === Response Parser ===
 def parse_arxiv_response(xml_text: str) -> List[Dict]:
     ns = {"atom": "http://www.w3.org/2005/Atom"}
     root = ET.fromstring(xml_text)
