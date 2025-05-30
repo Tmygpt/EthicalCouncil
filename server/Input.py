@@ -1,42 +1,41 @@
-import httpx
 from mcp.server.fastmcp import FastMCP
-import os
+from openai import AsyncOpenAI
 from dotenv import load_dotenv
-import openai
+import os
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
-mcp = FastMCP("input-agent")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-async def get_keywords_from_openai(prompt: str) -> str:
-    """Use OpenAI to convert a natural question into keywords."""
-    response = await openai.ChatCompletion.acreate(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "Convert the question into 3–6 academic search keywords."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.3
-    )
-    return response.choices[0].message.content.strip()
-
-async def call_collector_agent(keywords: str) -> str:
-    """Make an A2A request to the collector agent."""
-    url = f"http://localhost:3100/a2a/collector/get_research_papers"
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, json={"topic": keywords}, timeout=15.0)
-        response.raise_for_status()
-        return response.json().get("result", "[No response from collector]")
+client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+mcp = FastMCP("input", transport="stdio")
 
 @mcp.tool()
-async def route_query(question: str) -> str:
-    """Reformat the query using OpenAI and send to the collector agent via A2A."""
-    keywords = await get_keywords_from_openai(question)
-    result = await call_collector_agent(keywords)
+async def prompt_science(question: str) -> str:
+    """
+    Science prompt
+    """
+    response = await client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "Convert this question into 3-6 keywords that can be used to search for research papers relevant to this. The keywords should focus on the scientific aspect and be enough to be displayed in relevant titles of scientific research papers"},
+            {"role": "user", "content": question}
+        ]
+    )
 
-    return f"""🔎 Reformatted Query: {keywords}
+    return response.choices[0].message.content.strip()
 
-📚 Collector Agent Response:
-{result}
-"""
+@mcp.tool()
+async def prompt_religion(question: str) -> str:
+    """
+    Religion prompt
+    """
+    response = await client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "Convert this question into 3-6 keywords that can be used to search for research papers relevant to this. The keywords should focus on the ethical and moral aspect and be enough to be displayed in relevant titles of philosophical/ethical/moral/religious research papers"},
+            {"role": "user", "content": question}
+        ]
+    )
+
+    return response.choices[0].message.content.strip()
