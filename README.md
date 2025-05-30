@@ -1,0 +1,1 @@
+This projects enables a2a communication between multiple agents in order explain ethical and moral dilemmas with progressive scientific advancements.
