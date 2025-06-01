@@ -16,9 +16,9 @@ async def prompt_science(question: str) -> str:
     Science prompt
     """
     response = await client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Convert this question into 3-6 keywords that can be used to search for research papers relevant to this. The keywords should focus on the scientific aspect and be enough to be displayed in relevant titles of scientific research papers"},
+            {"role": "system", "content": "Extract 3-6 keywords for scientific paper search. Focus strictly on technical and empirical concepts. Example: 'Formation of universe' → 'big bang, cosmic inflation, nucleosynthesis, dark matter, general relativity, astrophysics'."},
             {"role": "user", "content": question}
         ]
     )
@@ -31,9 +31,9 @@ async def prompt_religion(question: str) -> str:
     Religion prompt
     """
     response = await client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Convert this question into 3-6 keywords that can be used to search for research papers relevant to this. The keywords should focus on the ethical and moral aspect and be enough to be displayed in relevant titles of philosophical/ethical/moral/religious research papers"},
+            {"role": "system", "content": "Extract 3-6 keywords for philosophy, ethics, or religion papers. Focus on metaphysical, existential, or moral aspects of the topic. Example: 'Formation of universe' → 'creationism, divine origin, cosmology, first cause, theology of creation, metaphysics'."},
             {"role": "user", "content": question}
         ]
     )
