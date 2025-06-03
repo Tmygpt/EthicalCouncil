@@ -21,6 +21,9 @@ import httpx                                # Async HTTP client for making web r
 from httpx_sse import connect_sse           # SSE client extension for httpx (not used currently)
 from typing import Any                      # Type hints for flexible input/output
 
+from ogAgent.Input import prompt_science, prompt_religion
+from ogAgent.collector import get_science_papers, get_religion_papers
+
 # Import supported request types
 from models.request import SendTaskRequest, GetTaskRequest  # Removed CancelTaskRequest
 
@@ -110,3 +113,20 @@ class A2AClient:
 
             except json.JSONDecodeError as e:
                 raise A2AClientJSONError(str(e)) from e
+
+
+# ---------------------------------------------------------------------------
+# Helper used in this simplified demo
+# ---------------------------------------------------------------------------
+async def process_prompt(prompt: str) -> str:
+    """Split a prompt and fetch relevant papers."""
+    science = await prompt_science(prompt)
+    ethics = await prompt_religion(prompt)
+    science_papers = await get_science_papers(science)
+    ethics_papers = await get_religion_papers(ethics)
+    return (
+        f"Science keywords: {science}\n"
+        f"Ethical keywords: {ethics}\n\n"
+        f"Science Papers:\n{science_papers}\n\n"
+        f"Religious Papers:\n{ethics_papers}"
+    )
