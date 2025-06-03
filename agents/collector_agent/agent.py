@@ -1,5 +1,8 @@
 import logging
-from ogAgent.collector import get_science_papers, get_religion_papers
+from agents.collector_agent.collector import (
+    get_science_papers,
+    get_religion_papers,
+)
 
 logger = logging.getLogger(__name__)
 
