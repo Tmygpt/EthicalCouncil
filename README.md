@@ -31,14 +31,14 @@ version_4_multi_agent_mcp/
 │       ├── mcp_connect.py           # Connects to MCP servers & lists their tools
 │       └── mcp_config.json          # Defines available MCP servers & launch commands
 ├── agents/
-│   ├── tell_time_agent/
-│   │   ├── __main__.py         # Starts TellTimeAgent server
-│   │   ├── agent.py            # Gemini-based time agent
-│   │   └── task_manager.py     # In-memory task handler for TellTimeAgent
-│   ├── greeting_agent/
-│   │   ├── __main__.py         # Starts GreetingAgent server
-│   │   ├── agent.py            # Orchestrator that calls TellTimeAgent + LLM greeting
-│   │   └── task_manager.py     # Task handler for GreetingAgent
+│   ├── input_agent/
+│   │   ├── __main__.py         # Starts InputAgent server
+│   │   ├── agent.py            # Extracts scientific/ethical keywords
+│   │   └── task_manager.py     # Task handler for InputAgent
+│   ├── collector_agent/
+│   │   ├── __main__.py         # Starts CollectorAgent server
+│   │   ├── agent.py            # Fetches science & religion papers
+│   │   └── task_manager.py     # Task handler for CollectorAgent
 │   └── host_agent/
 │       ├── entry.py                 # CLI: boots the OrchestratorAgent server
 │       ├── orchestrator.py          # Gemini LLM routing logic + TaskManager
@@ -97,11 +97,11 @@ version_4_multi_agent_mcp/
 ### 1. Start your child A2A agents
 
 ```bash
-# TellTimeAgent (returns current time)
-uv run python3 -m agents.tell_time_agent --host localhost --port 10002
+# InputAgent (extracts keywords)
+uv run python3 -m agents.input_agent --host localhost --port 10002
 
-# GreetingAgent (calls TellTimeAgent + LLM greeting)
-uv run python3 -m agents.greeting_agent --host localhost --port 10001
+# CollectorAgent (fetches papers)
+uv run python3 -m agents.collector_agent --host localhost --port 10001
 ```
 
 > Each agent serves a JSON-RPC endpoint at `/` and advertises metadata at `/.well-known/agent.json`.
@@ -112,10 +112,10 @@ uv run python3 -m agents.greeting_agent --host localhost --port 10001
 uv run python3 -m agents.host_agent.entry --host localhost --port 10000
 ```
 
-### 3. Use the CLI to talk to your Orchestrator
+### 3. Use the CLI
 
 ```bash
-uv run python3 -m app.cmd.cmd --agent http://localhost:10000
+uv run python3 -m app.cmd.cmd
 ```
 ---
 
@@ -128,8 +128,8 @@ uv run python3 -m app.cmd.cmd --agent http://localhost:10000
    - **A2A branch:** `list_agents()` & `delegate_task(...)`.  
    - **MCP branch:** Discovers MCP servers, loads & exposes each tool.
 
-3. **Child A2A Agents**  
-   - Domain-specific handlers (time, greetings).
+3. **Child A2A Agents**
+   - InputAgent and CollectorAgent handle keyword extraction and paper lookup.
 
 4. **MCP Servers**  
    - Serve tool definitions & executions over stdio.
