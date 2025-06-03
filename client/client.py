@@ -21,8 +21,11 @@ import httpx                                # Async HTTP client for making web r
 from httpx_sse import connect_sse           # SSE client extension for httpx (not used currently)
 from typing import Any                      # Type hints for flexible input/output
 
-from ogAgent.Input import prompt_science, prompt_religion
-from ogAgent.collector import get_science_papers, get_religion_papers
+from agents.input_agent.input import prompt_science, prompt_religion
+from agents.collector_agent.collector import (
+    get_science_papers,
+    get_religion_papers,
+)
 
 # Import supported request types
 from models.request import SendTaskRequest, GetTaskRequest  # Removed CancelTaskRequest

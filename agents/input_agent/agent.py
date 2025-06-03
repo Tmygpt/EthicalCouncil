@@ -1,5 +1,5 @@
 import logging
-from ogAgent.Input import prompt_science, prompt_religion
+from agents.input_agent.input import prompt_science, prompt_religion
 
 logger = logging.getLogger(__name__)
 
