@@ -21,7 +21,7 @@ This repository implements a small multi-agent framework designed to collaborati
    ```
 
 3. **Configure credentials**  
-   Create a `.env` in the project root containing:  
+   Create a `.env` in the project root and enter this in the terminal:  
    ```bash
    touch .env
    echo "GOOGLE_API_KEY=your_gemini_api_key_here" > .env
