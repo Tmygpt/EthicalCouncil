@@ -137,7 +137,6 @@ async def process_prompt(prompt: str) -> str:
     # Copy the collected links before the global list is mutated again
     papers = collector_papers_list.copy()
 
-    await SummaryAgent().invoke(papers, prompt)
     """summary_text = await SummaryAgent().invoke(papers, prompt)"""
 
     # Combine keywords, paper listings, and the summary for display
@@ -149,7 +148,7 @@ async def process_prompt(prompt: str) -> str:
         f"Science Papers:\n{science_papers}\n\n"
         f"Religious Papers:\n{ethics_papers}\n\n"
     )"""
-
-    print("What the public thought:\n")
+    
     await SummaryAgent().invoke(papers, prompt)
     return ""
+    
