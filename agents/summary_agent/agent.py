@@ -9,16 +9,16 @@ class SummaryAgent:
 
     SUPPORTED_CONTENT_TYPES = ["text", "text/plain", "list"]
 
-    async def invoke(self, prompt: List[str], query: str) -> str:
+    async def invoke(self, papers: List[str], query: str) -> str:
         """
         Summarize the provided papers based on the given query.
         
         Args:
-            prompt (str): The text of the papers to summarize.
+            papers (List[str]): Links to the papers to summarize.
             query (str): The original query for context.
         
         Returns:
             str: A summary of the papers.
         """
-        response = await summarize_papers(prompt, query)
+        response = await summarize_papers(papers, query)
         return f"What the public thought:\n{response}"

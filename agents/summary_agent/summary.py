@@ -1,14 +1,15 @@
-import asyncio
 from groq import AsyncGroq
 from mcp.server.fastmcp import FastMCP
-from typing import List, Dict
+from typing import List
 
 
 mcp = FastMCP("input", transport="stdio")
 
 @mcp.tool()
-async def summarize_paper(prompt: List[str], query: str)-> str:
+async def summarize_papers(papers: List[str], query: str) -> str:
+    """Generate a summary of the provided papers for the user's query."""
     client = AsyncGroq()
+    links = "\n".join(papers)
     response = await client.chat.completions.create(
         messages=[
             {
@@ -18,7 +19,13 @@ async def summarize_paper(prompt: List[str], query: str)-> str:
             # Set a user message for the assistant to respond to.
             {
                 "role": "user",
-                "content": f"Summarize the following papers:\n\n{prompt}\n\nPlease provide a concise summary of the key findings and implications of these papers. The original query was: {query}. Focus on the relevance to the topic at hand and elaborate on the ethical dilemnas raised by the query.",
+                "content": (
+                    f"Summarize the following papers:\n\n{links}\n\n"
+                    f"Please provide a concise summary of the key findings and "
+                    f"implications of these papers. The original query was: {query}. "
+                    f"Focus on the relevance to the topic at hand and elaborate on "
+                    f"the ethical dilemnas raised by the query."
+                ),
             }
         ],
 
