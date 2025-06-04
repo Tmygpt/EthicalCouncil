@@ -14,7 +14,7 @@ from agents.collector_agent.collector import (
     get_religion_papers,
     papers_list as collector_papers_list,
 )
-from agents.mediator_agent.agent import MediatorAgent
+from agents.summary_agent.agent import SummaryAgent
 
 # Import supported request types
 from models.request import SendTaskRequest, GetTaskRequest  # Removed CancelTaskRequest
@@ -116,7 +116,7 @@ async def process_prompt(prompt: str) -> str:
     # Copy the collected links before the global list is mutated again
     papers = collector_papers_list.copy()
 
-    """summary_text = await MediatorAgent().invoke(papers, prompt)"""
+    """summary_text = await SummaryAgent().invoke(papers, prompt)"""
 
     # Combine keywords, paper listings, and the summary for display
     links_text = "\n".join(papers)
@@ -128,6 +128,6 @@ async def process_prompt(prompt: str) -> str:
         f"Religious Papers:\n{ethics_papers}\n\n"
     )"""
     
-    await MediatorAgent().invoke(papers, prompt)
+    await SummaryAgent().invoke(papers, prompt)
     return ""
     
