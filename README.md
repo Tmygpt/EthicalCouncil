@@ -24,9 +24,12 @@ This repository implements a small multi-agent framework designed to collaborati
    Create a `.env` in the project root containing:  
    ```bash
    touch .env
-   echo "GOOGLE_API_KEY=your_gemini_api_key_here" > .env
-   echo "OPENAI_API_KEU=your_openai_api_key_here" > .env
-   echo "GROQ_API_KEY=your_groq_api_key_here" > .env
+   echo "OPENAI_API_KEY=your_openai_api_key_here" >> .env
+   echo "OPENAI_API_TYPE=azure" >> .env
+   echo "OPENAI_API_BASE=https://tv01.openai.azure.com/" >> .env
+   echo "OPENAI_API_VERSION=2023-03-15-preview" >> .env
+   echo "OPENAI_ENGINE=your_engine" >> .env
+   echo "GROQ_API_KEY=your_groq_api_key_here" >> .env
    ```
 
 ---
