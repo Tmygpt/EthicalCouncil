@@ -1,18 +1,3 @@
-# =============================================================================
-# server.py
-# =============================================================================
-# 📌 Purpose:
-# This file defines a very simple A2A (Agent-to-Agent) server.
-# It supports:
-# - Receiving task requests via POST ("/")
-# - Letting clients discover the agent's details via GET ("/.well-known/agent.json")
-# NOTE: It does not support streaming or push notifications in this version.
-# =============================================================================
-
-
-# -----------------------------------------------------------------------------
-# 🧱 Required Imports
-# -----------------------------------------------------------------------------
 
 # 🌐 Starlette is a lightweight web framework for building ASGI applications
 from starlette.applications import Starlette            # To create our web app

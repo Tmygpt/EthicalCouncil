@@ -1,16 +1,3 @@
-# =============================================================================
-# client/client.py
-# =============================================================================
-# Purpose:
-# This file defines a reusable, asynchronous Python client for interacting
-# with an Agent2Agent (A2A) server.
-#
-# It supports:
-# - Sending tasks and receiving responses
-# - Getting task status or history
-# - (Streaming and canceling are not supported in this simplified version)
-# =============================================================================
-
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
@@ -59,10 +46,6 @@ class A2AClientJSONError(Exception):
 
 class A2AClient:
     def __init__(self, agent_card: AgentCard = None, url: str = None):
-        """
-        Initializes the client using either an agent card or a direct URL.
-        One of the two must be provided.
-        """
         if agent_card:
             self.url = agent_card.url
         elif url:
@@ -120,11 +103,7 @@ class A2AClient:
                 raise A2AClientJSONError(str(e)) from e
 
 
-# ---------------------------------------------------------------------------
-# Helper used in this simplified demo
-# ---------------------------------------------------------------------------
 async def process_prompt(prompt: str) -> str:
-    """Split a prompt, fetch papers, and return a summary."""
     # Extract keywords using the input agent helpers
     science = await prompt_science(prompt)
     ethics = await prompt_religion(prompt)
