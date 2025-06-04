@@ -1,11 +1,11 @@
 # Ethical Client
 
-## Project
+## Project Overview
 This repository implements a small multi-agent framework designed to collaboratively answer ethics-related questions by retrieving and summarizing scientific and religious research.
 
 ---
 
-## ⚙️ Setup & Install
+## Setup & Install
 
 1. **Clone & enter**  
    ```bash
@@ -21,7 +21,7 @@ This repository implements a small multi-agent framework designed to collaborati
    ```
 
 3. **Configure credentials**  
-   Create a `.env` in the project root containing:  
+   Create a `.env` in the project root and enter this in the terminal:  
    ```bash
    touch .env
    echo "OPENAI_API_KEY=your_openai_api_key_here" >> .env
@@ -34,7 +34,7 @@ This repository implements a small multi-agent framework designed to collaborati
 
 ---
 
-## 🎬 Running the Demo
+## Running the Demo
 
 ```bash
 honcho start
