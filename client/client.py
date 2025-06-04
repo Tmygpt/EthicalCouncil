@@ -25,7 +25,9 @@ from agents.input_agent.input import prompt_science, prompt_religion
 from agents.collector_agent.collector import (
     get_science_papers,
     get_religion_papers,
+    papers_list as collector_papers_list,
 )
+from agents.summary_agent.agent import SummaryAgent
 
 # Import supported request types
 from models.request import SendTaskRequest, GetTaskRequest  # Removed CancelTaskRequest
@@ -122,14 +124,27 @@ class A2AClient:
 # Helper used in this simplified demo
 # ---------------------------------------------------------------------------
 async def process_prompt(prompt: str) -> str:
-    """Split a prompt and fetch relevant papers."""
+    """Split a prompt, fetch papers, and return a summary."""
+    # Extract keywords using the input agent helpers
     science = await prompt_science(prompt)
     ethics = await prompt_religion(prompt)
+
+    # Clear any previous collector results and fetch papers for both sets
+    collector_papers_list.clear()
     science_papers = await get_science_papers(science)
     ethics_papers = await get_religion_papers(ethics)
+
+    # Copy the collected links before the global list is mutated again
+    papers = collector_papers_list.copy()
+
+    # Generate a summary using the collected links and the original query
+    summary_text = await SummaryAgent().invoke(papers, prompt)
+
+    # Combine keywords, paper listings, and the summary for display
     return (
         f"Science keywords: {science}\n"
         f"Ethical keywords: {ethics}\n\n"
         f"Science Papers:\n{science_papers}\n\n"
-        f"Religious Papers:\n{ethics_papers}"
+        f"Religious Papers:\n{ethics_papers}\n\n"
+        f"{summary_text}"
     )
