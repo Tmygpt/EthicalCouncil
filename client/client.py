@@ -14,6 +14,7 @@ from agents.collector_agent.collector import (
     get_religion_papers,
     papers_list as collector_papers_list,
 )
+from agents.mediator_agent.agent import MediatorAgent
 
 # Import supported request types
 from models.request import SendTaskRequest, GetTaskRequest  # Removed CancelTaskRequest
@@ -103,9 +104,6 @@ class A2AClient:
 
 
 async def process_prompt(prompt: str) -> str:
-    """Process a user prompt by collecting papers and invoking the mediator."""
-    from agents.mediator_agent.agent import MediatorAgent
-
     # Extract keywords using the input agent helpers
     science = await prompt_science(prompt)
     ethics = await prompt_religion(prompt)
