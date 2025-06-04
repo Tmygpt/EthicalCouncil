@@ -11,9 +11,7 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
 * **CollectorAgent (The Archivist):** Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
 
 
-* **ScienceSummaryAgent (The Chronicler):** Reviews the scrolls and explains the scientific perspective.
-* **EthicsSummaryAgent (The Moralist):** Considers the moral and religious implications of the query.
-* **MediatorAgent (The Arbiter):** Merges both summaries into a single balanced answer.
+* **SummaryAgent (The Chronicler):** Studies the collected scrolls and composes clear summaries via the Groq API.
 
 
 * **OrchestratorAgent (The Elder):** Oversees the Council, coordinating the deliberations, managing tools, and guiding the agents' collaboration via Gemini’s ADK runner.
