@@ -90,13 +90,21 @@ class A2AClient:
                 response = await client.post(
                     self.url,
                     json=request.model_dump(),  # Convert Pydantic model to JSON
-                    timeout=60
+                    timeout=60,
                 )
-                response.raise_for_status()     # Raise error if status code is 4xx/5xx
-                return response.json()          # Return parsed response as a dict
+                response.raise_for_status()  # Raise error if status code is 4xx/5xx
+                return response.json()  # Return parsed response as a dict
 
             except httpx.HTTPStatusError as e:
-                raise A2AClientHTTPError(e.response.status_code, str(e)) from e
+                # Try to include any server-provided error details
+                try:
+                    error_body = e.response.json()
+                except Exception:
+                    error_body = e.response.text
+                raise A2AClientHTTPError(e.response.status_code, str(error_body)) from e
+
+            except httpx.RequestError as e:
+                raise A2AClientHTTPError(None, str(e)) from e
 
             except json.JSONDecodeError as e:
                 raise A2AClientJSONError(str(e)) from e
