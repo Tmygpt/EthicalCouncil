@@ -2,7 +2,10 @@ import asyncio
 from contextlib import redirect_stdout
 import io
 import streamlit as st
+import os
+import sys
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from client.client import process_prompt
 
 st.title("Ethical Research Assistant")

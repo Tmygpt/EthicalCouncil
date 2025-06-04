@@ -38,7 +38,7 @@ This repository implements a small multi-agent framework designed to collaborati
 
 ```bash
 honcho start
-uv run python3 -m app.cmd.cmd
+streamlit run app/cmd/streamlit_app.py
 ```
 ---
 
