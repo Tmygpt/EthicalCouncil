@@ -1,14 +1,14 @@
 import logging
 from server.task_manager import InMemoryTaskManager
-from agents.summary_agent.agent import SummaryAgent
+from agents.ethics_summary_agent.agent import EthicsSummaryAgent
 from models.request import SendTaskRequest, SendTaskResponse
 from models.task import Message, TaskStatus, TaskState, TextPart
 from typing import List, Tuple
 
 logger = logging.getLogger(__name__)
 
-class SummaryTaskManager(InMemoryTaskManager):
-    def __init__(self, agent: SummaryAgent):
+class EthicsSummaryTaskManager(InMemoryTaskManager):
+    def __init__(self, agent: EthicsSummaryAgent):
         super().__init__()
         self.agent = agent
 
@@ -22,7 +22,7 @@ class SummaryTaskManager(InMemoryTaskManager):
         return papers, query
 
     async def on_send_task(self, request: SendTaskRequest) -> SendTaskResponse:
-        logger.info(f"Processing summary task: {request.params.id}")
+        logger.info(f"Processing ethics summary task: {request.params.id}")
         task = await self.upsert_task(request.params)
         papers, query = self._parse_input(request)
         result_text = await self.agent.invoke(papers, query)
@@ -31,4 +31,3 @@ class SummaryTaskManager(InMemoryTaskManager):
             task.status = TaskStatus(state=TaskState.COMPLETED)
             task.history.append(agent_message)
         return SendTaskResponse(id=request.id, result=task)
-
