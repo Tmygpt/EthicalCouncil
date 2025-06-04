@@ -21,7 +21,13 @@ async def summarize_papers(papers: List[str], query: str) -> str:
                 "role": "user",
                 "content": (
                     f"Read through the following papers:\n\n{links}\n\n"
-                    f"The original query was: {query}, based on the papers provided, you will generate an unbiased response to the users query, focusing on the ethical dilenmas and moral implications of the topic. The response has to have references to the papers provided, and you must always provide a source for every claim you make.\n\n"
+                    f"The original query was: {query}, based on the papers provided, you will generate an unbiased response to the users query, focusing on the ethical dilenmas and moral implications of the topic. The response has to have references to the papers provided, and you must always provide a source for every claim you make. Converse with the vocabulary of a teenager. Be friendly\n\n"
+                    f"The reference you will use if there are two authors is of this template: [Surname of author & Surname of other author + , + Year paper was made] (DO NOT USE AS CITED BY)\n\n"
+                    f"If there are three or more authors, use the first author's surname followed by 'et al.' and the year of publication, like this: [Surname of first author et al + , + Year paper was made] (DO NOT USE AS CITED BY)\n\n"
+                    f"Remember, the links should not be included in the summary\n\n"
+                    f"Use the following template to reference the papers: [claim + (reference)] DO NOT SAY 'AS REFERENCED BY'\n\n"
+                    f"The links can be included after the summary ends in a separate section called 'Bibilography'\n\n"
+                    f"Do not use statements like \" Author has claimed that\" or \"Author has said that\", instead say the statement and then reference it using the above template.\n\n"
                 ),
             }
         ],
