@@ -20,11 +20,8 @@ async def summarize_papers(papers: List[str], query: str) -> str:
             {
                 "role": "user",
                 "content": (
-                    f"Summarize the following papers:\n\n{links}\n\n"
-                    f"Please provide a concise summary of the key findings and "
-                    f"implications of these papers. The original query was: {query}. "
-                    f"Focus on the relevance to the topic at hand and elaborate on "
-                    f"the ethical dilemnas raised by the query."
+                    f"Read through the following papers:\n\n{links}\n\n"
+                    f"The original query was: {query}, based on the papers provided, you will generate an unbiased response to the users query, focusing on the ethical dilenmas and moral implications of the topic. The response has to have references to the papers provided, and you must always provide a source for every claim you make.\n\n"
                 ),
             }
         ],
