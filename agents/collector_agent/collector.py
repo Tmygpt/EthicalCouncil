@@ -8,6 +8,8 @@ mcp = FastMCP("collector", transport="stdio")
 ARXIV_API_URL = "http://export.arxiv.org/api/query"
 OPENALEX_API_URL = "https://api.openalex.org/works"
 
+papers_list: List[str] = []
+
 # SCIENCE:
 def show_science_response(xml_text: str) -> List[Dict]:
     url = {"atom": "http://www.w3.org/2005/Atom"}
@@ -17,8 +19,8 @@ def show_science_response(xml_text: str) -> List[Dict]:
     for paper in root.findall("atom:entry", url):
         title = paper.find("atom:title", url).text.strip()
         authors = [author.find("atom:name", url).text for author in paper.findall("atom:author", url)]
-        link = next((l.attrib["href"] for l in paper.findall("atom:link", url) if l.attrib.get("type") == "application/pdf"), "No PDF link")
-
+        link = next((l.attrib["href"] for l in paper.findall("atom:link", url) if l.attrib.get("type") == "application/pdf"),"No PDF link",)
+        papers_list.append(link)
         results.append({
             "title": title,
             "authors": ", ".join(authors),
@@ -52,6 +54,7 @@ def show_religion_response(data: Dict) -> List[Dict]:
         link = paper.get("primary_location", {}).get("landing_page_url", "No Link")
         topics = [concept.get("display_name", "") for concept in paper.get("concepts", [])]
 
+        papers_list.append(link)
         results.append({
             "title": title,
             "link": link,
