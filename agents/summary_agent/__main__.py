@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @click.option("--port", default=10003, help="Port number for the server")
 def main(host: str, port: int):
     """Start the SummaryAgent server."""
-    capabilities = AgentCapabilities(streaming=False)
+    capabilities = AgentCapabilities(streaming=True)
     skill = AgentSkill(
         id="summarize_papers",
         name="Paper Summarizer",

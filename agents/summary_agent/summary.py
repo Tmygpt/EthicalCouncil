@@ -2,7 +2,6 @@ from groq import AsyncGroq
 from mcp.server.fastmcp import FastMCP
 from typing import List
 
-
 mcp = FastMCP("input", transport="stdio")
 
 @mcp.tool()
@@ -59,8 +58,20 @@ async def summarize_papers(papers: List[str], query: str) -> str:
         stop=None,
 
         # If set, partial message deltas will be sent.
-        stream=False,
+        stream=True,
     )
 
+    async for chunk in response:
+        delta = chunk.choices[0].delta.content or ""
+        print(delta, end="", flush=True)
+
     # Print the incremental deltas returned by the LLM.
-    return response.choices[0].message.content
+    return ""
+
+"""Incase i want to use the return value later:
+summary = ""
+    async for chunk in response:
+        delta = chunk.choices[0].delta.content or ""
+        print(delta, end="", flush=True)
+    # Print the incremental deltas returned by the LLM.
+    return summary"""

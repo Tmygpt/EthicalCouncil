@@ -20,5 +20,6 @@ class SummaryAgent:
         Returns:
             str: A summary of the papers.
         """
-        response = await summarize_papers(papers, query)
-        return f"What the public thought:\n{response}"
+        print("What the public thought:\n")
+        await summarize_papers(papers, query)
+        return ""
