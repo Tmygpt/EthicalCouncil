@@ -1,30 +1,20 @@
 # The Council of Ethical Dilemmas
 
-## Project Overview
 The Council of Ethical Dilemmas is a multi-agent framework where specialized agents — Scholars, Collectors, Summarizers, and the Orchestrator — collaborate to deliberate on complex ethical questions.
 
 By consulting both scientific knowledge and religious wisdom, the Council retrieves, studies, and synthesizes insights from modern research and ancient thought to provide thoughtful responses to your moral inquiries.
 
-The Council's chambers include:
+## The Council's chambers include:
 
-**InputAgent (The Scholar)**
+* **InputAgent (The Scholar):** Extracts ethical and scientific concepts from your query.
 
-Extracts ethical and scientific concepts from your query.
-
-
-**CollectorAgent (The Archivist)**
-
-Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
+* **CollectorAgent (The Archivist):** Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
 
 
-**SummaryAgent (The Chronicler)**
-
-Studies the collected scrolls and composes clear summaries via the Groq API.
+* **SummaryAgent (The Chronicler):** Studies the collected scrolls and composes clear summaries via the Groq API.
 
 
-**OrchestratorAgent (The Elder)**
-
-Oversees the Council, coordinating the deliberations, managing tools, and guiding the agents' collaboration via Gemini’s ADK runner.
+* **OrchestratorAgent (The Elder):** Oversees the Council, coordinating the deliberations, managing tools, and guiding the agents' collaboration via Gemini’s ADK runner.
 
 
 
