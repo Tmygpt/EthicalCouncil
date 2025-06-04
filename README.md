@@ -1,26 +1,44 @@
-# Ethical Client
+# The Council of Ethical Dilemmas
 
 ## Project Overview
-This repository implements a small multi-agent framework designed to collaboratively answer ethics-related questions by retrieving and summarizing scientific and religious research.
+The Council of Ethical Dilemmas is a multi-agent framework where specialized agents — Scholars, Collectors, Summarizers, and the Orchestrator — collaborate to deliberate on complex ethical questions.
+
+By consulting both scientific knowledge and religious wisdom, the Council retrieves, studies, and synthesizes insights from modern research and ancient thought to provide thoughtful responses to your moral inquiries.
+
+The Council's chambers include:
+
+**InputAgent (The Scholar)**
+Extracts ethical and scientific concepts from your query.
+
+**CollectorAgent (The Archivist)**
+Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
+
+**SummaryAgent (The Chronicler)**
+Studies the collected scrolls and composes clear summaries via the Groq API.
+
+**OrchestratorAgent (The Elder)**
+Oversees the Council, coordinating the deliberations, managing tools, and guiding the agents' collaboration via Gemini’s ADK runner.
+
+
 
 ---
 
-## Setup & Install
+## Summoning the Council
 
-1. **Clone & enter**  
+1. **Call the council (Clone the Repository)**  
    ```bash
    git clone https://Tmygpt/EthicalClient.git
    cd EthicalClient
    ```
 
-2. **Create & activate virtualenv**  
+2. **Prepare the Council Chamber (Virtual Environment)**  
    ```bash
    uv venv
    source .venv/bin/activate
    uv sync --all-groups
    ```
 
-3. **Configure credentials**  
+3. **Present the Sacred Credentials provided to you by the sacred one**  
    Create a `.env` in the project root and enter this in the terminal:  
    ```bash
    touch .env
@@ -34,8 +52,7 @@ This repository implements a small multi-agent framework designed to collaborati
 
 ---
 
-## Running the Demo
-
+## To convene the Council and begin ethical inquiry:
 ```bash
 honcho start
 streamlit run app/cmd/streamlit_app.py
