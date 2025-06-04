@@ -1,6 +1,7 @@
 # Ethical Client
 
 This repository implements a small multi-agent framework designed to collaboratively answer ethics-related questions by retrieving and summarizing scientific and religious research.
+
 ---
 
 ## ⚙️ Setup & Install
