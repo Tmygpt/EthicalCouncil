@@ -1,6 +1,6 @@
 # Ethical Client
 
-## Project Overview
+## Project
 This repository implements a small multi-agent framework designed to collaboratively answer ethics-related questions by retrieving and summarizing scientific and religious research.
 
 ---
@@ -33,51 +33,18 @@ This repository implements a small multi-agent framework designed to collaborati
 
 ## 🎬 Running the Demo
 
-### 1. Start your child A2A agents
-
 ```bash
-# InputAgent (extracts keywords)
-uv run python3 -m agents.input_agent --host localhost --port 10002
-
-# CollectorAgent (fetches papers)
-uv run python3 -m agents.collector_agent --host localhost --port 10001
-```
-
-> Each agent serves a JSON-RPC endpoint at `/` and advertises metadata at `/.well-known/agent.json`.
-
-### 2. Start the Host OrchestratorAgent
-
-```bash
-uv run python3 -m agents.host_agent.entry --host localhost --port 10000
-```
-
-### 3. Use the CLI
-
-```bash
+honcho start
 uv run python3 -m app.cmd.cmd
 ```
 ---
 
-## 📖 Architecture Overview
+## Acknowledgements
 
-1. **Front-End Client**  
-   - Web/Mobile/CLI → Issues A2A JSON-RPC calls to the Host Agent.
+1. https://github.com/theailanguage/a2a_samples/
+2. https://arxiv.org
+3. https://openalex.org
 
-2. **Host OrchestratorAgent**  
-   - **A2A branch:** `list_agents()` & `delegate_task(...)`.  
-   - **MCP branch:** Discovers MCP servers, loads & exposes each tool.
-
-3. **Child A2A Agents**
-   - InputAgent and CollectorAgent handle keyword extraction and paper lookup.
-
-4. **MCP Servers**  
-   - Serve tool definitions & executions over stdio.
+Thank you to arXiv for use of its open access interoperability.
 
 ---
-
-## 💡 Why This Design?
-
-- **Modularity**: Easily add/remove agents or tools.  
-- **Scalability**: Central orchestrator routes high volume.  
-- **Flexibility**: LLM picks between programmatic and agent skills.  
-- **Simplicity**: Leverages JSON-RPC & stdio protocols.
