@@ -1,12 +1,29 @@
 {
     "mcpServers": {
-        "terminal": {
-            "command": "/Users/theailanguage/.local/bin/uv",
+        "connector": {
+            "command": "/Users/tanmay.gupta/.local/bin/uv",
             "args": [
-                "--directory", "/Users/theailanguage/mcp/servers/terminal_server",
+                "--directory", "/Users/tanmay.gupta/Desktop/Glance/EthicalClient/agents/collector_agent/collector",
                 "run", 
-                "terminal_server.py"
+                "collector.py"
+            ]
+        },
+        "input": {
+            "command": "/Users/tanmay.gupta/.local/bin/uv",
+            "args": [
+                "--directory", "/Users/tanmay.gupta/Desktop/Glance/EthicalClient/agents/input_agent/input",
+                "run", 
+                "input.py"
+            ]
+        },
+        "summary": {
+            "command": "/Users/tanmay.gupta/.local/bin/uv",
+            "args": [
+                "--directory", "/Users/tanmay.gupta/Desktop/Glance/EthicalClient/agents/summary_agent/summary",
+                "run", 
+                "summary.py"
             ]
         }
     }
 }
+
