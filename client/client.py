@@ -96,7 +96,13 @@ class A2AClient:
                 return response.json()          # Return parsed response as a dict
 
             except httpx.HTTPStatusError as e:
-                raise A2AClientHTTPError(e.response.status_code, str(e)) from e
+                # Try to pull a JSON-RPC error message from the body
+                try:
+                    data = e.response.json()
+                    message = data.get("error", {}).get("message", str(e))
+                    raise A2AClientHTTPError(e.response.status_code, message) from e
+                except Exception:
+                    raise A2AClientHTTPError(e.response.status_code, str(e)) from e
 
             except json.JSONDecodeError as e:
                 raise A2AClientJSONError(str(e)) from e
