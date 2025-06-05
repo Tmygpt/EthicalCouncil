@@ -29,10 +29,10 @@ async def summarize_papers_ethics(papers: List[str], query: str) -> str:
 
                     For every claim you make, you must provide a source from the papers using these strict rules:
 
-                    - If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]
-                    - If the paper has three or more authors, reference as: [Surname of first author et al., Year]
+                    - If the paper has two authors, reference as: (Surname of author & Surname of other author, Year)
+                    - If the paper has three or more authors, reference as: (Surname of first author et al, Year)
 
-                    Do not say 'as cited by' or use any indirect language like 'the author claims that...'.
+                    Do not say 'as cited by' or use any indirect language like 'the author claims that...', or even 'the paper states that...'.
 
                     Do not include the paper links inside the summary.
 
