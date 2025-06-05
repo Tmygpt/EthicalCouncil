@@ -1504,6 +1504,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "starlette" },
     { name = "streamlit" },
+    { name = "unpywall" },
     { name = "uvicorn" },
 ]
 
@@ -1528,6 +1529,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.1.0" },
     { name = "starlette", specifier = ">=0.46.2" },
     { name = "streamlit", specifier = ">=1.45.1" },
+    { name = "unpywall", specifier = ">=0.2.3" },
     { name = "uvicorn", specifier = ">=0.34.2" },
 ]
 
@@ -2786,6 +2788,16 @@ sdist = { url = "https://files.pythonhosted.org/packages/8b/2e/c14812d3d4d9cd177
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c2/14/e2a54fabd4f08cd7af1c07030603c3356b74da07f7cc056e600436edfa17/tzlocal-5.3.1-py3-none-any.whl", hash = "sha256:eb1a66c3ef5847adf7a834f1be0800581b683b5608e74f86ecbcef8ab91bb85d", size = 18026, upload-time = "2025-03-05T21:17:39.857Z" },
 ]
+
+[[package]]
+name = "unpywall"
+version = "0.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pandas" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1b/d4/c7734a4b188db5eba57c50e283ebbc05673ff0ab85b6d9485356f18643de/unpywall-0.2.3.tar.gz", hash = "sha256:4b1977d4e90ae5638a851bf1a8c1c04aa092ad3f8c0137aae0d0c07038f86e68", size = 15417, upload-time = "2024-02-19T10:21:11.677Z" }
 
 [[package]]
 name = "uritemplate"

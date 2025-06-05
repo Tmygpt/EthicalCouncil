@@ -25,5 +25,6 @@ dependencies = [
     "uvicorn>=0.34.2",
     "honcho>=2.0.0",
     "streamlit>=1.45.1",
+    "unpywall>=0.2.3",
 ]
 
