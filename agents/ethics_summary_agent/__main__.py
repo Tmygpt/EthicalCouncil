@@ -3,17 +3,17 @@ import click
 
 from server.server import A2AServer
 from models.agent import AgentCard, AgentCapabilities, AgentSkill
-from agents.science_summary_agent.task_manager import SummaryTaskManager
-from agents.science_summary_agent.agent import SummaryAgent
+from agents.ethics_summary_agent.task_manager import SummaryTaskManager
+from agents.ethics_summary_agent.agent import SummaryAgent
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @click.command()
 @click.option("--host", default="localhost", help="Host to bind the server to")
-@click.option("--port", default=10004, help="Port number for the server")
+@click.option("--port", default=10005, help="Port number for the server")
 def main(host: str, port: int):
-    """Start the ScienceSummaryAgent server."""
+    """Start the EthicsSummaryAgent server."""
     capabilities = AgentCapabilities(streaming=True)
     skill = AgentSkill(
         id="summarize_papers",
@@ -42,4 +42,3 @@ def main(host: str, port: int):
 
 if __name__ == "__main__":
     main()
-
