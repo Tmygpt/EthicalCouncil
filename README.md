@@ -11,7 +11,10 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
 * **CollectorAgent (The Archivist):** Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
 
 
-* **SummaryAgent (The Chronicler):** Studies the collected scrolls and composes clear summaries via the Groq API.
+* **ScienceSummaryAgent (The Science Sage):** Distills scientific insights from the collected scrolls.
+
+
+* **EthicsSummaryAgent (The Ethics Sage):** Extracts moral perspectives from those same texts.
 
 
 * **OrchestratorAgent (The Elder):** Oversees the Council, coordinating the deliberations, managing tools, and guiding the agents' collaboration via Gemini’s ADK runner.
@@ -35,7 +38,7 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
    uv sync --all-groups
    ```
 
-3. **Present the Sacred Credentials provided to you by the sacred one**  
+3. **Present the Sacred Credentials provided to you by the holy one**  
    Create a `.env` in the project root and enter this in the terminal:  
    ```bash
    touch .env

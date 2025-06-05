@@ -25,18 +25,21 @@ async def summarize_papers_ethics(papers: List[str], query: str) -> str:
                     The original user query is:  
                     {query}
 
-                    Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the moral conflicts discussed in the provided papers (do NOT reference any scientific information).
+                    Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the ethical dilemmas, moral conflicts, and value-based implications discussed in the provided papers.
 
                     For every claim you make, you must provide a source from the papers using these strict rules:
 
-                    - If the paper has two authors, reference as: (Surname of author & Surname of other author, Year)
-                    - If the paper has three or more authors, reference as: (Surname of first author et al, Year)
+                    - If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]
+                    - If the paper has three or more authors, reference as: [Surname of first author et al, Year]
 
                     Do not say 'as cited by' or use any indirect language like 'the author claims that...', or even 'the paper states that...'.
 
-                    Do not include the paper links inside the summary.
+                    Do not include the paper links inside the summary. Do not say author is not in the provided list, however, doi of paper is. Absolutely no mentions of the paper links inside the summary.
 
-                    Write your response using simple, friendly language appropriate for a teenage audience."""
+                    Write your response using simple, friendly language appropriate for a teenage audience. If you do not have sufficient data, dont bring up the claims
+                    
+                    """
+
 
                 ),
             }

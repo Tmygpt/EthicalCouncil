@@ -14,7 +14,12 @@ from agents.collector_agent.collector import (
     get_religion_papers,
     papers_list as collector_papers_list,
 )
-from agents.summary_agent.agent import SummaryAgent
+from agents.science_summary_agent.agent import (
+    SummaryAgent as ScienceSummaryAgent,
+)
+from agents.ethics_summary_agent.agent import (
+    SummaryAgent as EthicsSummaryAgent,
+)
 
 from models.request import SendTaskRequest, GetTaskRequest
 
@@ -109,6 +114,9 @@ async def process_prompt(prompt: str) -> str:
         f"Religious Papers:\n{ethics_papers}\n\n"
     )"""
     
-    await SummaryAgent().invoke(papers, prompt)
+    await ScienceSummaryAgent().invoke(papers, prompt)
+    print("\n\n\n")
+    await EthicsSummaryAgent().invoke(papers, prompt)
+    return ""
     return ""
     

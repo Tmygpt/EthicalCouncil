@@ -18,23 +18,25 @@ async def summarize_papers_science(papers: List[str], query: str) -> str:
             {
                 "role": "user",
                 "content": (
-                   f"""Read the following papers:
+                    f"""Read the following papers:Add commentMore actions
 
                     {links}
 
                     The original user query is:  
                     {query}
 
-                    Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the scientific findings, methodologies, and conclusions discussed in the provided papers.
+                    Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the ethical dilemmas, moral conflicts, and value-based implications discussed in the provided papers.
 
                     For every claim you make, you must provide a source from the papers using these strict rules:
 
-                    - If the paper has two authors, reference as: (Surname of author & Surname of other author, Year)
-                    - If the paper has three or more authors, reference as: (Surname of first author et al, Year)
+                    - If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]
+                    - If the paper has three or more authors, reference as: [Surname of first author et al., Year]
 
-                    Do not say 'as cited by' or use any indirect language like 'the author claims that...', or even 'the paper states that...'.
+                    Do not say 'as cited by' or use any indirect language like 'the author claims that...'.
 
                     Do not include the paper links inside the summary.
+                    
+                    After the summary, provide a section titled 'Bibliography' and list the paper links in markdown format.
 
                     Write your response using simple, friendly language appropriate for a teenage audience."""
 

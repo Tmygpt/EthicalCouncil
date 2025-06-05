@@ -15,14 +15,6 @@
                 "run", 
                 "input.py"
             ]
-        },
-        "summary": {
-            "command": "/Users/tanmay.gupta/.local/bin/uv",
-            "args": [
-                "--directory", "/Users/tanmay.gupta/Desktop/Glance/EthicalClient/agents/summary_agent/summary",
-                "run", 
-                "summary.py"
-            ]
         }
     }
 }
