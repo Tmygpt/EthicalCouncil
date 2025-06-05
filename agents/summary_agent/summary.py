@@ -25,7 +25,6 @@ async def summarize_papers(papers: List[str], query: str) -> str:
                     f"If there are three or more authors, use the first author's surname followed by 'et al.' and the year of publication, like this: [Surname of first author et al + , + Year paper was made] (DO NOT USE AS CITED BY)\n\n"
                     f"Remember, the links should not be included in the summary\n\n"
                     f"Use the following template to reference the papers: [claim + (reference)] DO NOT SAY 'AS REFERENCED BY'\n\n"
-                    f"The links can be included after the summary ends in a separate section called 'Bibilography'\n\n"
                     f"Do not use statements like \" Author has claimed that\" or \"Author has said that\", instead say the statement and then reference it using the above template.\n\n"
                 ),
             }
