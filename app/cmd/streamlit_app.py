@@ -19,7 +19,7 @@ class StreamlitWriter(io.StringIO):
 
     def write(self, s: str) -> int:
         written = super().write(s)
-        self.placeholder.text(self.getvalue())
+        self.placeholder.markdown(self.getvalue())
         return written
 
 
