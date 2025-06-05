@@ -1,14 +1,18 @@
 from typing import List, Dict
-import os
 import httpx
 import xml.etree.ElementTree as ET
 from mcp.server.fastmcp import FastMCP
+import requests
+from bs4 import BeautifulSoup
+import time
+import random
+import asyncio
 
 mcp = FastMCP("collector", transport="stdio")
 
 ARXIV_API_URL = "http://export.arxiv.org/api/query"
-CROSSREF_API_URL = "https://api.crossref.org/works"
-CROSSREF_MAILTO = os.environ.get("CROSSREF_MAILTO", "openaccess@ethicalcouncil.org")
+
+GSCHOLAR_BASE_URL = "https://scholar.google.com/scholar"
 
 papers_list: List[str] = []
 
@@ -49,62 +53,62 @@ async def get_arxiv_articles(topic: str, max_results: int = 7) -> List[Dict]:
         
 # RELIGION:
 
-def show_crossref_response(data: Dict, limit: int) -> List[Dict]:
-    """Parse Crossref API response data."""
-    results = []
+def scrape_scholar_articles(query: str, num_pages: int = 2) -> List[Dict]:
+    """Scrape Google Scholar for the given query."""
+    articles = []
+    page = 0
 
-    items = data.get("message", {}).get("items", [])
-    for item in items[:limit]:
-        titles = item.get("title", [])
-        title = titles[0] if titles else "No Title"
-
-        pdf_link = None
-        for link in item.get("link", []):
-            if link.get("content-type") == "application/pdf" and link.get("URL"):
-                pdf_link = link["URL"]
-                break
-        if not pdf_link:
-            url = item.get("URL")
-            if isinstance(url, str) and url.endswith(".pdf"):
-                pdf_link = url
-            else:
-                pdf_link = url
-
-        if pdf_link:
-            papers_list.append(pdf_link)
-
-        results.append({
-            "title": title,
-            "link": pdf_link or "No Link",
-            "topics": []
-        })
-
-    return results
-
-async def get_crossref_articles(topic: str, limit: int = 7) -> List[Dict]:
-    """Retrieve papers from arXiv and the Crossref API."""
-    arxiv_results = await get_arxiv_articles(topic, max_results=limit)
-
-    params = {
-        "query": topic,
-        "rows": limit,
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/58.0.3029.110 Safari/537.3"
+        )
     }
-    if CROSSREF_MAILTO:
-        params["mailto"] = CROSSREF_MAILTO
 
-    headers = {"User-Agent": f"ethicalcouncil/1.0 (mailto:{CROSSREF_MAILTO})"}
+    while page < num_pages:
+        url = f"{GSCHOLAR_BASE_URL}?start={page*10}&q={query}&hl=en&as_sdt=0,5"
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            print(f"Failed to fetch page {page+1}: Status {response.status_code}")
+            break
 
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(CROSSREF_API_URL, params=params, headers=headers, timeout=15.0)
-            response.raise_for_status()
-            data = response.json()
-            cr_results = show_crossref_response(data, limit)
-        except Exception as e:
-            print(f"[Crossref API ERROR] {e}")
-            cr_results = []
+        soup = BeautifulSoup(response.text, "html.parser")
+        results = soup.find_all("div", class_="gs_ri")
 
-    return (arxiv_results + cr_results)[:limit]
+        for result in results:
+            title_tag = result.find("h3", class_="gs_rt")
+            title = title_tag.text if title_tag else "No Title"
+
+            authors_tag = result.find("div", class_="gs_a")
+            authors = authors_tag.text if authors_tag else "No Authors"
+
+            link_tag = title_tag.find("a") if title_tag else None
+            link = link_tag["href"] if link_tag else "No Link"
+
+            if link:
+                papers_list.append(link)
+
+            articles.append(
+                {
+                    "title": title,
+                    "authors": authors,
+                    "link": link,
+                    "topics": [],
+                }
+            )
+
+        page += 1
+        time.sleep(random.uniform(1, 3))
+
+    return articles
+
+
+async def get_scholar_articles(topic: str, limit: int = 7) -> List[Dict]:
+    """Retrieve papers from arXiv and Google Scholar."""
+    arxiv_results = await get_arxiv_articles(topic, max_results=limit)
+    scholar_results = await asyncio.to_thread(scrape_scholar_articles, topic, 2)
+    return (arxiv_results + scholar_results)[:limit]
         
 @mcp.tool()
 async def get_science_papers(topic: str) -> str:
@@ -130,7 +134,7 @@ async def get_religion_papers(topic: str) -> str:
     """
     Get Religious Papers
     """
-    results = await get_crossref_articles(topic)
+    results = await get_scholar_articles(topic)
 
     if not results:
         return "No relevant research papers found."
