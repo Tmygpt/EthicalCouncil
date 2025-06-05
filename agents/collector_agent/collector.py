@@ -52,12 +52,23 @@ def show_religion_response(data: Dict) -> List[Dict]:
     for paper in data.get("results", []):
         title = paper.get("title", "No Title")
         link = paper.get("primary_location", {}).get("landing_page_url", "No Link")
+        doi = paper.get("doi", "")
+
+        # Convert arXiv DOIs or landing pages to direct PDF links
+        if link.startswith("https://arxiv.org/abs/"):
+            pdf_link = link.replace("/abs/", "/pdf/") + ".pdf"
+        elif doi and "arXiv." in doi:
+            arxiv_id = doi.split("arXiv.")[-1]
+            pdf_link = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+        else:
+            pdf_link = link
+
         topics = [concept.get("display_name", "") for concept in paper.get("concepts", [])]
 
-        papers_list.append(link)
+        papers_list.append(pdf_link)
         results.append({
             "title": title,
-            "link": link,
+            "link": pdf_link,
             "topics": topics
         })
 

@@ -117,6 +117,9 @@ async def process_prompt(prompt: str) -> str:
     await ScienceSummaryAgent().invoke(papers, prompt)
     print("\n\n\n")
     await EthicsSummaryAgent().invoke(papers, prompt)
+    print("\n\n\n")
+    for paper in papers:
+        print(paper)
     return ""
     return ""
     
