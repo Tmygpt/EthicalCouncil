@@ -27,5 +27,6 @@ dependencies = [
     "streamlit>=1.45.1",
     "unpywall>=0.2.3",
     "beautifulsoup4>=4.13.4",
+    "pytest>=8.4.0",
 ]
 

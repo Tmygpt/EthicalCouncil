@@ -1,13 +1,26 @@
-from groq import AsyncGroq
 from mcp.server.fastmcp import FastMCP
+from openai import AsyncAzureOpenAI
+from dotenv import load_dotenv
+import os
 from typing import List
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
+OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
+OPENAI_ENGINE = os.getenv("OPENAI_ENGINE")
 
 mcp = FastMCP("input", transport="stdio")
 
 @mcp.tool()
 async def summarize_papers_science(papers: List[str], query: str) -> str:
     """Generate a summary of the provided papers for the user's query."""
-    client = AsyncGroq()
+    client = AsyncAzureOpenAI(
+        api_key=OPENAI_API_KEY,
+        azure_endpoint=OPENAI_API_BASE,
+        api_version=OPENAI_API_VERSION,
+        azure_deployment=OPENAI_ENGINE,
+    )
     links = "\n".join(papers)
     response = await client.chat.completions.create(
         messages=[
@@ -41,9 +54,9 @@ async def summarize_papers_science(papers: List[str], query: str) -> str:
                 ),
             }
         ],
-        model="llama-3.3-70b-versatile",
+        model=OPENAI_ENGINE,
         temperature=0.5,
-        max_completion_tokens=1024,
+        max_tokens=1024,
         top_p=1,
         stop=None,
         stream=True,

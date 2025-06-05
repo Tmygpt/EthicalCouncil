@@ -1,0 +1,65 @@
+import asyncio
+import importlib
+
+import pytest
+from streamlit.testing.v1 import AppTest
+
+import app.cmd.streamlit_app as streamlit_app
+
+
+class DummyPlaceholder:
+    def __init__(self):
+        self.markdowns = []
+        self.texts = []
+
+    def markdown(self, text):
+        self.markdowns.append(text)
+
+    def text(self, text):
+        self.texts.append(text)
+
+
+def test_streamlit_writer_updates_placeholder():
+    ph = DummyPlaceholder()
+    writer = streamlit_app.StreamlitWriter(ph)
+    writer.write("hello")
+    writer.write(" world")
+    assert ph.markdowns == ["hello", "hello world"]
+
+
+def test_main_runs_process_prompt(monkeypatch):
+    called = {}
+
+    async def dummy_process(prompt):
+        called['prompt'] = prompt
+        print('dummy output')
+
+    async def dummy_sleep(_):
+        pass
+
+    monkeypatch.setattr(streamlit_app, 'process_prompt', dummy_process)
+    monkeypatch.setattr(streamlit_app.asyncio, 'sleep', dummy_sleep)
+    monkeypatch.setattr(streamlit_app.random, 'choice', lambda seq: seq[0])
+
+    ph = DummyPlaceholder()
+    asyncio.run(streamlit_app.main('foo', ph))
+    assert called.get('prompt') == 'foo'
+    # ensure process output captured
+    assert any('dummy output' in m for m in ph.markdowns)
+
+
+def test_streamlit_no_prompt(monkeypatch):
+    called = {}
+
+    async def dummy_process(prompt):
+        called['prompt'] = prompt
+
+    import client.client
+    monkeypatch.setattr(client.client, 'process_prompt', dummy_process)
+    importlib.reload(streamlit_app)
+
+    at = AppTest.from_file('app/cmd/streamlit_app.py')
+    at.run()
+    at.button[0].click()
+    at.run(timeout=1)
+    assert 'prompt' not in called
