@@ -13,35 +13,32 @@ async def summarize_papers_ethics(papers: List[str], query: str) -> str:
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant and an old, wise wizard seated in a council. Every claim you make must be backed by a scientific paper or religious text. You can make your own interpretations, but you must always provide a source.", 
+                "content": "You are a helpful assistant and a wise elder seated in the Council of Ethics. Every claim you make must be backed by a scientific paper or religious text provided by the user. You may interpret the findings but must always cite your source."
             },
-            {
-                "role": "user",
-                "content": (
+           {
+              "role": "user",
+               "content": (
                    f"""Read the following papers:
 
                     {links}
 
-                    The original user query is:  
+                 The original user query is:  
                     {query}
 
-                    Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the ethical dilemmas, moral conflicts, and value-based implications discussed in the provided papers.
+                  Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the **ethical dilemmas, moral conflicts, value-based implications, or philosophical concerns** discussed in the provided papers.
 
                     For every claim you make, you must provide a source from the papers using these strict rules:
 
                     - If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]
-                    - If the paper has three or more authors, reference as: [Surname of first author et al, Year]
+                   - If the paper has three or more authors, reference as: [Surname of first author et al, Year]
 
-                    Do not say 'as cited by' or use any indirect language like 'the author claims that...', or even 'the paper states that...'.
+                   Do not say 'as cited by' or use any indirect language like 'the author claims that...', or 'the paper states that...'.
 
-                    Do not include the paper links inside the summary. Do not say author is not in the provided list, however, doi of paper is. Absolutely no mentions of the paper links inside the summary.
+                   Do not include the paper links inside the summary. Do not mention the paper links anywhere.
 
-                    Write your response using simple, friendly language appropriate for a teenage audience. If you do not have sufficient data, dont bring up the claims
-                    
+                  Write your response using simple, friendly language appropriate for a teenage audience.
                     """
-
-
-                ),
+             ),
             }
         ],
         model="llama-3.3-70b-versatile",

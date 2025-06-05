@@ -13,33 +13,31 @@ async def summarize_papers_science(papers: List[str], query: str) -> str:
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant and an old, wise wizard seated in a council. Every claim you make must be backed by a scientific paper or religious text. You can make your own interpretations, but you must always provide a source.", 
+                "content": "You are a helpful assistant and a wise scholar seated in the Grand Council of Science. Every claim you make must be backed by a scientific paper provided by the user. You may interpret the findings but must always cite your source."
             },
             {
                 "role": "user",
                 "content": (
-                    f"""Read the following papers:Add commentMore actions
+                    f"""Read the following papers:
 
-                    {links}
+                  {links}
 
-                    The original user query is:  
+                   The original user query is:  
                     {query}
 
-                    Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the ethical dilemmas, moral conflicts, and value-based implications discussed in the provided papers.
+                 Your task is to generate a clear, unbiased response that directly answers the user's query, focusing only on the **scientific findings, advantages, discoveries, and breakthroughs** discussed in the provided papers.
 
-                    For every claim you make, you must provide a source from the papers using these strict rules:
+                  For every claim you make, you must provide a source from the papers using these strict rules:
 
-                    - If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]
-                    - If the paper has three or more authors, reference as: [Surname of first author et al., Year]
+                   - If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]
+                    - If the paper has three or more authors, reference as: [Surname of first author et al, Year]
 
-                    Do not say 'as cited by' or use any indirect language like 'the author claims that...'.
+                 Do not say 'as cited by' or use any indirect language like 'the author claims that...', or 'the paper states that...'.
 
-                    Do not include the paper links inside the summary.
-                    
-                    After the summary, provide a section titled 'Bibliography' and list the paper links in markdown format.
+                 Do not include the paper links inside the summary. Do not mention the paper links anywhere.
 
-                    Write your response using simple, friendly language appropriate for a teenage audience."""
-
+                  Write your response using simple, friendly language appropriate for a teenage audience.
+                 """
                 ),
             }
         ],
