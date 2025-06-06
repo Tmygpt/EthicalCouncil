@@ -2,7 +2,7 @@ import logging
 import asyncio
 from typing import List
 import requests
-import fitz  # PyMuPDF
+import fitz 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from mcp.server.fastmcp import FastMCP
 
@@ -44,7 +44,7 @@ async def _process_url(url: str, splitter: RecursiveCharacterTextSplitter) -> Li
 @mcp.tool()
 async def process_papers(urls: List[str]) -> List[str]:
     """Download PDFs and return list of text chunks."""
-    splitter = RecursiveCharacterTextSplitter(chunk_size=3000, chunk_overlap=300)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=6000, chunk_overlap=500)
     tasks = [asyncio.create_task(_process_url(url, splitter)) for url in urls]
     results = await asyncio.gather(*tasks)
     # flatten

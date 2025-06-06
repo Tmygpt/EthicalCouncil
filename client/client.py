@@ -20,6 +20,7 @@ from agents.science_summary_agent.agent import (
 from agents.ethics_summary_agent.agent import (
     SummaryAgent as EthicsSummaryAgent,
 )
+from agents.processor_agent.processor import process_papers
 
 from models.request import SendTaskRequest, GetTaskRequest
 
@@ -102,6 +103,8 @@ async def process_prompt(prompt: str) -> str:
     ethics_papers = await get_religion_papers(ethics)
 
     papers = collector_papers_list.copy()
+    
+    chunks = await process_papers(papers)
 
     """summary_text = await SummaryAgent().invoke(papers, prompt)"""
 
@@ -114,12 +117,10 @@ async def process_prompt(prompt: str) -> str:
         f"Religious Papers:\n{ethics_papers}\n\n"
     )"""
     
-    await ScienceSummaryAgent().invoke(papers, prompt)
+    await ScienceSummaryAgent().invoke(chunks, prompt)
     print("\n\n\n")
-    await EthicsSummaryAgent().invoke(papers, prompt)
+    await EthicsSummaryAgent().invoke(chunks, prompt)
     print("\n\n\n")
-    for paper in papers:
-        print(paper)
+    for chunk in chunks:
+        print(chunk)
     return ""
-    return ""
-    

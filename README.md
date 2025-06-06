@@ -10,6 +10,8 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
 
 * **CollectorAgent (The Archivist):** Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
 
+* **ProcessorAgent (The Scribe):** Downloads those scrolls and extracts text chunks for study.
+
 
 * **ScienceSummaryAgent (The Science Sage):** Distills scientific insights from the collected scrolls.
 
@@ -25,13 +27,13 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
 
 ## Summoning the Council
 
-1. **Call the council (Clone the Repository)**  
+1. **Call the council**  
    ```bash
    git clone https://Tmygpt/EthicalClient.git
    cd EthicalClient
    ```
 
-2. **Prepare the Council Chamber (Virtual Environment)**  
+2. **Prepare the Council Chamber**  
    ```bash
    uv venv
    source .venv/bin/activate

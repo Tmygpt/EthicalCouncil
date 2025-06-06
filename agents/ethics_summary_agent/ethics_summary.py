@@ -14,14 +14,14 @@ mcp = FastMCP("input", transport="stdio")
 
 @mcp.tool()
 async def summarize_papers_ethics(papers: List[str], query: str) -> str:
-    """Generate a summary of the provided papers for the user's query."""
+    """Generate a summary of the provided text chunks for the user's query."""
     client = AsyncAzureOpenAI(
         api_key=OPENAI_API_KEY,
         azure_endpoint=OPENAI_API_BASE,
         api_version=OPENAI_API_VERSION,
         azure_deployment=OPENAI_ENGINE,
     )
-    links = "\n".join(papers)
+    chunks = "\n".join(papers)
     response = await client.chat.completions.create(
         messages=[
             {
@@ -31,9 +31,9 @@ async def summarize_papers_ethics(papers: List[str], query: str) -> str:
            {
               "role": "user",
                "content": (
-                   f"""Read the following papers:
+                   f"""Read the following text chunks from the papers:
 
-                    {links}
+                    {chunks}
 
                  The original user query is:  
                     {query}

@@ -18,9 +18,9 @@ def main(host: str, port: int):
     skill = AgentSkill(
         id="summarize_papers",
         name="Paper Summarizer",
-        description="Summarizes links to scientific and religious papers",
+        description="Summarizes text chunks from scientific and religious papers",
         tags=["summary", "papers"],
-        examples=["<query>\n<url1>\n<url2>"]
+        examples=["<query>\n<chunk1>\n<chunk2>"]
     )
     agent_card = AgentCard(
         name="SummaryAgent",
