@@ -1,0 +1,44 @@
+import os
+import sys
+import pytest
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from client import client as client_module
+
+
+class DummyAgent:
+    def __init__(self):
+        self.called = []
+    async def invoke(self, papers, prompt):
+        self.called.append((papers, prompt))
+
+
+@pytest.mark.asyncio
+async def test_process_prompt(monkeypatch):
+    async def dummy_kw(arg):
+        return "kw"
+    dummy = []
+    async def dummy_get(arg):
+        dummy.extend(["paper1", "paper2"])
+        return dummy
+
+    # patch input and collector functions
+    monkeypatch.setattr(client_module, "prompt_science", dummy_kw)
+    monkeypatch.setattr(client_module, "prompt_religion", dummy_kw)
+    monkeypatch.setattr(client_module, "get_science_papers", dummy_get)
+    monkeypatch.setattr(client_module, "get_religion_papers", dummy_get)
+    monkeypatch.setattr(client_module, "collector_papers_list", dummy)
+    agent1 = DummyAgent()
+    agent2 = DummyAgent()
+    monkeypatch.setattr(client_module, "ScienceSummaryAgent", lambda: agent1)
+    monkeypatch.setattr(client_module, "EthicsSummaryAgent", lambda: agent2)
+
+    result = await client_module.process_prompt("q")
+    assert result == ""
+    assert len(agent1.called) == 1
+    assert len(agent2.called) == 1
+    assert len(dummy) == 4
+    assert set(dummy) == {"paper1", "paper2"}
