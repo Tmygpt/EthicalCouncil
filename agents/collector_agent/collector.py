@@ -52,9 +52,8 @@ async def get_arxiv_articles(topic: str, max_results: int = 7) -> List[Dict]:
             return []
         
 # RELIGION:
-
+"""
 def scrape_scholar_articles(query: str, num_pages: int = 2) -> List[Dict]:
-    """Scrape Google Scholar for the given query."""
     articles = []
     page = 0
 
@@ -102,13 +101,14 @@ def scrape_scholar_articles(query: str, num_pages: int = 2) -> List[Dict]:
         time.sleep(random.uniform(1, 3))
 
     return articles
-
+"""
 
 async def get_scholar_articles(topic: str, limit: int = 7) -> List[Dict]:
     """Retrieve papers from arXiv and Google Scholar."""
     arxiv_results = await get_arxiv_articles(topic, max_results=limit)
-    scholar_results = await asyncio.to_thread(scrape_scholar_articles, topic, 2)
-    return (arxiv_results + scholar_results)[:limit]
+    """scholar_results = await asyncio.to_thread(scrape_scholar_articles, topic, 2)
+    return (arxiv_results + scholar_results)[:limit]"""
+    return arxiv_results
         
 @mcp.tool()
 async def get_science_papers(topic: str) -> str:
