@@ -57,7 +57,7 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
 ## To convene the Council and begin ethical inquiry:
 ```bash
 honcho start
-streamlit run app/cmd/streamlit_app.py
+streamlit run app/cli/streamlit_app.py
 ```
 ---
 

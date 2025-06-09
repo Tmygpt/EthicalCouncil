@@ -1,19 +1,35 @@
 import logging
 import asyncio
 from typing import List
+import requests
+import fitz
+from bs4 import BeautifulSoup
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import UnstructuredURLLoader
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("processor", transport="stdio")
 logger = logging.getLogger(__name__)
 
 async def _fetch_text(url: str) -> str:
-    """Fetch and parse raw text from a URL using UnstructuredURLLoader."""
+    """Fetch and parse raw text from a URL.
+
+    If the content is a PDF, use ``PyMuPDF`` to extract the text. Otherwise,
+    parse the HTML with ``BeautifulSoup``.
+    """
+
     try:
-        loader = UnstructuredURLLoader(urls=[url])
-        docs = await asyncio.to_thread(loader.load)
-        return "\n".join(d.page_content for d in docs)
+        response = await asyncio.to_thread(requests.get, url, timeout=30)
+        response.raise_for_status()
+        ctype = response.headers.get("Content-Type", "").lower()
+
+        if "pdf" in ctype or url.lower().endswith(".pdf"):
+            with fitz.open(stream=response.content, filetype="pdf") as doc:
+                texts = [page.get_text() for page in doc]
+            return "\n".join(texts)
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        text = soup.get_text(separator="\n")
+        return text
     except Exception as e:
         logger.warning(f"Failed to fetch {url}: {e}")
         return ""

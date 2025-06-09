@@ -4,7 +4,7 @@ import importlib
 import pytest
 from streamlit.testing.v1 import AppTest
 
-import app.cmd.streamlit_app as streamlit_app
+import app.cli.streamlit_app as streamlit_app
 
 
 class DummyPlaceholder:

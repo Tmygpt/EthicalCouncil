@@ -16,9 +16,9 @@ def test_app(monkeypatch):
     import importlib
     import client.client
     monkeypatch.setattr(client.client, 'process_prompt', dummy_process_prompt)
-    import app.cmd.streamlit_app as app_module
+    import app.cli.streamlit_app as app_module
     importlib.reload(app_module)
-    at = AppTest.from_file('app/cmd/streamlit_app.py')
+    at = AppTest.from_file('app/cli/streamlit_app.py')
     at.run()
     at.text_area[0].input('test input')
     at.button[0].click()
