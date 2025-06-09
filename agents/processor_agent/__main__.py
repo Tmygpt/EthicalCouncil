@@ -16,14 +16,14 @@ def main(host: str, port: int):
     capabilities = AgentCapabilities(streaming=False)
     skill = AgentSkill(
         id="process_papers",
-        name="PDF Processor",
-        description="Downloads PDFs and returns text chunks",
-        tags=["pdf", "process"],
+        name="URL Processor",
+        description="Fetches text from URLs and returns chunks",
+        tags=["url", "process"],
         examples=["<url1>\n<url2>"]
     )
     agent_card = AgentCard(
         name="ProcessorAgent",
-        description="Processes PDF links into text chunks",
+        description="Processes links into text chunks",
         url=f"http://{host}:{port}/",
         version="1.0.0",
         defaultInputModes=ProcessorAgent.SUPPORTED_CONTENT_TYPES,

@@ -5,7 +5,7 @@ from agents.processor_agent.processor import process_papers
 logger = logging.getLogger(__name__)
 
 class ProcessorAgent:
-    """Agent that downloads PDFs and returns text chunks."""
+    """Agent that fetches text from URLs and returns text chunks."""
 
     SUPPORTED_CONTENT_TYPES = ["text", "text/plain", "list"]
 
