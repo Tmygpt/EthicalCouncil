@@ -3,10 +3,10 @@
 # -----------------------------------------------------------------------------
 
 import json
-from uuid import uuid4                               
-import httpx                               
-from httpx_sse import connect_sse          
-from typing import Any                     
+from uuid import uuid4
+import httpx
+from httpx_sse import connect_sse
+from typing import Any
 
 from agents.input_agent.input import prompt_science, prompt_religion
 from agents.collector_agent.collector import (
@@ -58,14 +58,14 @@ class A2AClient:
 
         request = SendTaskRequest(
             id=uuid4().hex,
-            params=TaskSendParams(**payload) 
+            params=TaskSendParams(**payload)
         )
 
         print("\n📤 Sending JSON-RPC request:")
         print(json.dumps(request.model_dump(), indent=2))
 
         response = await self._send_request(request)
-        return Task(**response["result"])  
+        return Task(**response["result"])
 
 
 
@@ -81,11 +81,11 @@ class A2AClient:
             try:
                 response = await client.post(
                     self.url,
-                    json=request.model_dump(), 
+                    json=request.model_dump(),
                     timeout=60
                 )
-                response.raise_for_status()    
-                return response.json()        
+                response.raise_for_status()
+                return response.json()
 
             except httpx.HTTPStatusError as e:
                 raise A2AClientHTTPError(e.response.status_code, str(e)) from e
@@ -103,8 +103,8 @@ async def process_prompt(prompt: str) -> str:
     ethics_papers = await get_religion_papers(ethics)
 
     papers = collector_papers_list.copy()
-    
-    chunks = await process_papers(papers)
+
+    await process_papers(papers)
 
     """summary_text = await SummaryAgent().invoke(papers, prompt)"""
 
@@ -116,11 +116,9 @@ async def process_prompt(prompt: str) -> str:
         f"Science Papers:\n{science_papers}\n\n"
         f"Religious Papers:\n{ethics_papers}\n\n"
     )"""
-    
-    await ScienceSummaryAgent().invoke(chunks, prompt)
+
+    await ScienceSummaryAgent().invoke(papers, prompt)
     print("\n\n\n")
-    await EthicsSummaryAgent().invoke(chunks, prompt)
+    await EthicsSummaryAgent().invoke(papers, prompt)
     print("\n\n\n")
-    for chunk in chunks:
-        print(chunk)
     return ""

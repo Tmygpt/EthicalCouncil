@@ -18,13 +18,13 @@ def main(host: str, port: int):
     skill = AgentSkill(
         id="summarize_papers",
         name="Paper Summarizer",
-        description="Summarizes text chunks from scientific and religious papers",
+        description="Answers questions using documents stored in Pinecone",
         tags=["summary", "papers"],
-        examples=["<query>\n<chunk1>\n<chunk2>"]
+        examples=["<query>\n<url1>\n<url2>"]
     )
     agent_card = AgentCard(
         name="SummaryAgent",
-        description="Generates a summary from a list of papers",
+        description="Generates an answer from papers in Pinecone",
         url=f"http://{host}:{port}/",
         version="1.0.0",
         defaultInputModes=SummaryAgent.SUPPORTED_CONTENT_TYPES,

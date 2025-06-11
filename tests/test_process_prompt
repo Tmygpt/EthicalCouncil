@@ -12,8 +12,8 @@ from client import client as client_module
 class DummyAgent:
     def __init__(self):
         self.called = []
-    async def invoke(self, papers, prompt):
-        self.called.append((papers, prompt))
+    async def invoke(self, urls, prompt):
+        self.called.append((urls, prompt))
 
 
 @pytest.mark.asyncio
