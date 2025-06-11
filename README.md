@@ -10,13 +10,13 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
 
 * **CollectorAgent (The Archivist):** Retrieves ancient scrolls from the great libraries of arXiv and OpenAlex.
 
-* **ProcessorAgent (The Scribe):** Downloads those scrolls and extracts text chunks for study.
+* **ProcessorAgent (The Scribe):** Uploads the collected PDFs to a Pinecone vector store using Azure OpenAI embeddings.
 
 
-* **ScienceSummaryAgent (The Science Sage):** Distills scientific insights from the collected scrolls.
+* **ScienceSummaryAgent (The Science Sage):** Uses Retrieval-Augmented Generation with GPT‑4o to answer the user's question from the stored documents.
 
 
-* **EthicsSummaryAgent (The Ethics Sage):** Extracts moral perspectives from those same texts.
+* **EthicsSummaryAgent (The Ethics Sage):** Uses the same approach to provide ethical perspectives based on the stored documents.
 
 
 * **OrchestratorAgent (The Elder):** Oversees the Council, coordinating the deliberations, managing tools, and guiding the agents' collaboration via Gemini’s ADK runner.
@@ -50,7 +50,12 @@ By consulting both scientific knowledge and religious wisdom, the Council retrie
    echo "OPENAI_API_VERSION=2023-03-15-preview" >> .env
    echo "OPENAI_ENGINE=your_engine" >> .env
    echo "GROQ_API_KEY=your_groq_api_key_here" >> .env
-   ```
+   echo "PINECONE_API_KEY=your_pinecone_key" >> .env
+ echo "PINECONE_HOST=https://research-paper-summary-anadlyy.svc.aped-4627-b74a.pinecone.io" >> .env
+  ```
+
+The Pinecone index `research-paper-summary` expects 1024‑dimension vectors generated
+with Azure OpenAI's `text-embedding-3-large` model.
 
 ---
 

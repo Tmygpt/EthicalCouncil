@@ -17,13 +17,13 @@ def main(host: str, port: int):
     skill = AgentSkill(
         id="process_papers",
         name="URL Processor",
-        description="Fetches text from URLs and returns chunks",
+        description="Uploads document text to Pinecone",
         tags=["url", "process"],
         examples=["<url1>\n<url2>"]
     )
     agent_card = AgentCard(
         name="ProcessorAgent",
-        description="Processes links into text chunks",
+        description="Uploads the provided links to a Pinecone index",
         url=f"http://{host}:{port}/",
         version="1.0.0",
         defaultInputModes=ProcessorAgent.SUPPORTED_CONTENT_TYPES,

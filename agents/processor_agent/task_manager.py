@@ -20,8 +20,7 @@ class ProcessorTaskManager(InMemoryTaskManager):
         logger.info(f"Processing processor task: {request.params.id}")
         task = await self.upsert_task(request.params)
         urls = self._get_urls(request)
-        chunks = await self.agent.invoke(urls)
-        result_text = "\n".join(chunks)
+        result_text = await self.agent.invoke(urls)
         agent_message = Message(role="agent", parts=[TextPart(text=result_text)])
         async with self.lock:
             task.status = TaskStatus(state=TaskState.COMPLETED)

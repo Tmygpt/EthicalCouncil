@@ -1,6 +1,8 @@
 from mcp.server.fastmcp import FastMCP
 from openai import AsyncAzureOpenAI
+from pinecone import Pinecone
 from dotenv import load_dotenv
+import asyncio
 import os
 from typing import List
 
@@ -9,68 +11,47 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
 OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
 OPENAI_ENGINE = os.getenv("OPENAI_ENGINE")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_HOST = os.getenv("PINECONE_HOST")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "research-paper-summary")
 
 mcp = FastMCP("input", transport="stdio")
 
-@mcp.tool()
-async def summarize_papers_science(papers: List[str], query: str) -> str:
-    """Generate a summary using a MapReduce-style approach."""
-    client = AsyncAzureOpenAI(
-        api_key=OPENAI_API_KEY,
-        azure_endpoint=OPENAI_API_BASE,
-        api_version=OPENAI_API_VERSION,
-        azure_deployment=OPENAI_ENGINE,
-    )
+client = AsyncAzureOpenAI(
+    api_key=OPENAI_API_KEY,
+    azure_endpoint=OPENAI_API_BASE,
+    api_version=OPENAI_API_VERSION,
+    azure_deployment=OPENAI_ENGINE,
+)
 
+pc = Pinecone(api_key=PINECONE_API_KEY)
+
+@mcp.tool()
+async def summarize_papers_science(urls: List[str], query: str) -> str:
+    """Answer the query using documents stored in Pinecone."""
+    index = pc.Index(host=PINECONE_HOST)
+    embed = await client.embeddings.create(input=[query], model="text-embedding-3-large")
+    vector = embed.data[0].embedding
+    res = await asyncio.to_thread(index.query, vector=vector, top_k=10, namespace=PINECONE_INDEX_NAME, include_metadata=True, filter={"source": {"$in": urls}})
+    chunks = [m["metadata"].get("text", "") for m in res.get("matches", []) if m.get("metadata")]
+    context = "\n\n".join(chunks)
     system_prompt = (
         "You are a helpful assistant and a wise scholar seated in the Grand Council of Science. "
         "Every claim you make must be backed by a scientific paper provided by the user. "
         "You may interpret the findings but must always cite your source."
     )
-
-    chunk_summaries: List[str] = []
-    for chunk in papers:
-        resp = await client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": chunk},
-            ],
-            model=OPENAI_ENGINE,
-            temperature=0.5,
-            max_tokens=256,
-            top_p=1,
-        )
-        chunk_summaries.append(resp.choices[0].message.content.strip())
-
-    combined = "\n".join(chunk_summaries)
-
     final_prompt = (
-        f"Read the following summaries of the paper excerpts:\n\n{combined}\n\n"
-        f"The original user query is:\n{query}\n\n"
-        "Your task is to generate a clear, unbiased response that directly answers the user's query, "
-        "focusing only on the **scientific findings, advantages, discoveries, and breakthroughs** discussed in the provided papers.\n\n"
-        "For every claim you make, you must provide a source from the papers using these strict rules:\n"
-        "- If the paper has two authors, reference as: [Surname of author & Surname of other author, Year]\n"
-        "- If the paper has three or more authors, reference as: [Surname of first author et al, Year]\n\n"
-        "Do not say 'as cited by' or use any indirect language like 'the author claims that...', or 'the paper states that...'.\n"
-        "Do not include the paper links inside the summary. Do not mention the paper links anywhere.\n"
-        "Write your response using simple, friendly language appropriate for a teenage audience."
+        f"Use the following excerpts to answer the question.\n\n{context}\n\nQuestion: {query}\n\n"
+        "Focus only on scientific findings. Cite your sources using the metadata provided."
     )
-
     response = await client.chat.completions.create(
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": final_prompt},
-        ],
+        messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": final_prompt}],
         model=OPENAI_ENGINE,
         temperature=0.5,
         max_tokens=1024,
-        top_p=1,
         stream=True,
     )
-
     async for chunk in response:
         delta = chunk.choices[0].delta.content or ""
         print(delta, end="", flush=True)
-
     return ""
